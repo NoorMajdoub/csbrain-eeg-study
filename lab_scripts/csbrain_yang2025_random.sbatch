@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=csbrain_yang2025_rand
+#SBATCH --account=def-amiilab_gpu
+#SBATCH --partition=gpubase_bygpu_b2
+#SBATCH --gpus-per-node=h100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=06:00:00
+#SBATCH --output=/home/nourmaj/links/scratch/csbrain_yang2025_random_%j.out
+
+source /lustre10/scratch/nourmaj/envs/cbramod-gpu/bin/activate
+export HOME=/home/nourmaj/links/scratch/fake_home
+mkdir -p $HOME
+export NUMBA_DISABLE_JIT=1
+export NUMBA_CACHE_DIR=/home/nourmaj/links/scratch/numba_cache
+mkdir -p $NUMBA_CACHE_DIR
+
+cd /home/nourmaj/links/scratch/csbrain/CSBrain
+
+python finetune_main.py --downstream_dataset Yang2025 --datasets_dir /home/nourmaj/links/scratch/yang2025_processed --num_of_classes 2 --model_dir /home/nourmaj/links/scratch/csbrain_pth_downtasks/yang2025_random --model CSBrain --dropout 0.1 --weight_decay 0.05 --lr 0.0001 --batch_size 32

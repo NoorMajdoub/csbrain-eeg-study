@@ -10,6 +10,8 @@ from datasets import tusl_dataset, siena_dataset, hmc_dataset
 from finetune_trainer import Trainer
 from models import model_for_seedv,model_for_bciciv2a, model_for_tuab, model_for_tuev,model_for_faced,model_for_chb,model_for_speech,model_for_tusl,model_for_shu,model_for_seedvig,model_for_physio,model_for_isruc
 from models import model_for_siena, model_for_hmc,model_for_stress,model_for_mumtaz
+from datasets import karaone_dataset, yang2025_dataset, dream_dataset, japaneeg_dataset, clinical_dataset, thoughtviz_dataset
+from models import model_for_karaone, model_for_yang2025, model_for_dream, model_for_japaneeg, model_for_clinical, model_for_thoughtviz
 
 def main():
     parser = argparse.ArgumentParser(description='Big model downstream')
@@ -155,6 +157,42 @@ def main():
         load_dataset = hmc_dataset.LoadDataset(params) 
         data_loader = load_dataset.get_data_loader()
         model = model_for_hmc.Model(params)
+        t = Trainer(params, data_loader, model)
+        t.train_for_multiclass()
+    elif params.downstream_dataset == 'KaraOne':
+        load_dataset = karaone_dataset.LoadDataset(params)
+        data_loader = load_dataset.get_data_loader()
+        model = model_for_karaone.Model(params)
+        t = Trainer(params, data_loader, model)
+        t.train_for_binaryclass()
+    elif params.downstream_dataset == 'Yang2025':
+        load_dataset = yang2025_dataset.LoadDataset(params)
+        data_loader = load_dataset.get_data_loader()
+        model = model_for_yang2025.Model(params)
+        t = Trainer(params, data_loader, model)
+        t.train_for_binaryclass()
+    elif params.downstream_dataset == 'Dream':
+        load_dataset = dream_dataset.LoadDataset(params)
+        data_loader = load_dataset.get_data_loader()
+        model = model_for_dream.Model(params)
+        t = Trainer(params, data_loader, model)
+        t.train_for_binaryclass()
+    elif params.downstream_dataset == 'JapanEEG':
+        load_dataset = japaneeg_dataset.LoadDataset(params)
+        data_loader = load_dataset.get_data_loader()
+        model = model_for_japaneeg.Model(params)
+        t = Trainer(params, data_loader, model)
+        t.train_for_binaryclass()
+    elif params.downstream_dataset == 'Clinical':
+        load_dataset = clinical_dataset.LoadDataset(params)
+        data_loader = load_dataset.get_data_loader()
+        model = model_for_clinical.Model(params)
+        t = Trainer(params, data_loader, model)
+        t.train_for_binaryclass()
+    elif params.downstream_dataset == 'ThoughtViz':
+        load_dataset = thoughtviz_dataset.LoadDataset(params)
+        data_loader = load_dataset.get_data_loader()
+        model = model_for_thoughtviz.Model(params)
         t = Trainer(params, data_loader, model)
         t.train_for_multiclass()
     print("model:", params.model, "seed:", params.seed, "lr:", params.lr,"weight_decay:",params.weight_decay, "dropout:", params.dropout, "foundation_dir:", params.foundation_dir)
